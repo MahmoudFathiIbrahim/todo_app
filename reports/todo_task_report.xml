@@ -1,0 +1,115 @@
+<odoo>
+    <data>
+
+        <record id="todo_task_report" model="ir.actions.report">
+            <field name="name">To-Do Task Report</field>
+            <field name="model">todo.task</field>
+            <field name="report_type">qweb-html</field>
+            <field name="binding_model_id" ref="model_todo_task"/>
+            <field name="binding_type">report</field>
+            <field name="report_name">todo_app.todo_task_report_template</field>
+        </record>
+
+        <template id="todo_task_report_template">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <t t-foreach="docs" t-as="doc">
+                        <div class="page" style="page-break-after: always;">
+                            <div style="font-family: 'Arial', sans-serif;">
+                                <div style="display: block;">
+                                    <div style="width: 150px; padding-right: 10px; font-weight: bold; display: inline-block;">
+                                        Task:
+                                    </div>
+                                    <div style="flex: 1; display: inline-block;">
+                                        <t t-esc="doc.name"/>
+                                    </div>
+                                </div>
+                                <div style="display: block;">
+                                    <div style="width: 150px; padding-right: 10px; font-weight: bold; display: inline-block;">
+                                        Due Date:
+                                    </div>
+                                    <div style="flex: 1; display: inline-block;">
+                                        <t t-esc="doc.due_date"/>
+                                    </div>
+                                </div>
+                                <div style="display: block;">
+                                    <div style="width: 150px; padding-right: 10px; font-weight: bold; display: inline-block;">
+                                        Assign To:
+                                    </div>
+                                    <div style="flex: 1; display: inline-block;">
+                                        <t t-esc="doc.assign_to.name"/>
+                                    </div>
+                                </div>
+                                <div style="display: block;">
+                                    <div style="width: 150px; padding-right: 10px; font-weight: bold; display: inline-block;">
+                                        Estimated Time:
+                                    </div>
+                                    <div style="flex: 1; display: inline-block;">
+                                        <t t-esc="doc.estimated_time"/> H
+                                    </div>
+                                </div>
+                                <br/>
+                            </div>
+                            <dl>
+                                <dt>Description:</dt>
+                                <dd><t t-esc="doc.description"/></dd>
+                            </dl>
+
+                            <style>
+                                table {
+                                width:100%;
+                                border: 1px solid #b3adad;
+                                border-collapse: collapse;
+                                padding: 5px;
+                                }
+                                table th {
+                                border: 1px solid #b3adad;
+                                padding: 5px;
+                                background: #f0f0f0;
+                                color: #313030;
+                                }
+                                table td {
+                                border: 1px solid #b3adad;
+                                text-align: center;
+                                padding: 5px;
+                                background: #ffffff;
+                                color: #313030;
+                                }
+                            </style>
+                            <table>
+                                <thead>
+                                    <th colspan="4">
+                                        Timesheet
+                                    </th>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Date</th>
+                                        <th>Description</th>
+                                        <th>time</th>
+                                    </tr>
+                                    <t t-set="total_time" t-value="0"/>
+                                    <t t-foreach="doc.timesheet_line_ids" t-as="line">
+                                        <tr>
+                                            <td><t t-esc="line_index + 1"/></td>
+                                            <td><t t-esc="line.date"/></td>
+                                            <td><t t-esc="line.description"/></td>
+                                            <td><t t-esc="line.time"/> H</td>
+                                        </tr>
+                                        <t t-set="total_time" t-value="total_time + line.time"/>
+                                    </t>
+                                    <tr>
+                                        <td colspan="3">Total Time</td>
+                                        <td><t t-esc="total_time"/> H</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>
